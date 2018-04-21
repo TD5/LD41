@@ -8263,15 +8263,16 @@ var _elm_lang$html$Html_Events$Options = F2(
 var _td5$ld41$NeoNoirClicker$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'Increment') {
-			return model + 1;
-		} else {
-			return model - 1;
-		}
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{money: model.money + 1});
 	});
-var _td5$ld41$NeoNoirClicker$model = 0;
-var _td5$ld41$NeoNoirClicker$Decrement = {ctor: 'Decrement'};
-var _td5$ld41$NeoNoirClicker$Increment = {ctor: 'Increment'};
+var _td5$ld41$NeoNoirClicker$model = {money: 0, dodgyDealEnabled: false};
+var _td5$ld41$NeoNoirClicker$Model = F2(
+	function (a, b) {
+		return {money: a, dodgyDealEnabled: b};
+	});
+var _td5$ld41$NeoNoirClicker$SolveCasePressed = {ctor: 'SolveCasePressed'};
 var _td5$ld41$NeoNoirClicker$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -8290,7 +8291,7 @@ var _td5$ld41$NeoNoirClicker$view = function (model) {
 					_0: _elm_lang$html$Html$text(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							'Score: ',
+							'$ ',
 							_elm_lang$core$Basics$toString(model))),
 					_1: {ctor: '[]'}
 				}),
@@ -8300,7 +8301,7 @@ var _td5$ld41$NeoNoirClicker$view = function (model) {
 					_elm_lang$html$Html$button,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$Increment),
+						_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$SolveCasePressed),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$class('btn'),

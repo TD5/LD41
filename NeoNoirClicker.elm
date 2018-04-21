@@ -18,33 +18,32 @@ main =
 -- MODEL
 
 
-type alias Model = Int
+type alias Model = 
+    {
+        money : Int,
+        dodgyDealEnabled : Bool
+    }
 
 
 model : Model
 model =
-  0
-
+    {
+        money = 0,
+        dodgyDealEnabled = False
+    }
 
 
 -- UPDATE
 
 
 type Msg
-  = Increment
-  | Decrement
-
+  = SolveCasePressed
 
 update : Msg -> Model -> Model
 update msg model =
   case msg of
-    Increment ->
-      model + 1
-
-    Decrement ->
-      model - 1
-
-
+    SolveCasePressed ->
+      { model | money = model.money + 1 }
 
 -- VIEW
 
@@ -52,6 +51,6 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div [class "bk"]
-    [ div [] [ text ("Score: " ++ (toString model)) ]
-    , button [ onClick Increment , class "btn" ] [ text "Solve case" ]
+    [ div [] [ text ("$ " ++ (toString model)) ]
+    , button [ onClick SolveCasePressed , class "btn" ] [ text "Solve case" ]
     ]
