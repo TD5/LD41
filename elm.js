@@ -3746,6 +3746,203 @@ var _elm_lang$core$Result$fromMaybe = F2(
 		}
 	});
 
+var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
+var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
+var _elm_lang$core$Task$spawnCmd = F2(
+	function (router, _p0) {
+		var _p1 = _p0;
+		return _elm_lang$core$Native_Scheduler.spawn(
+			A2(
+				_elm_lang$core$Task$andThen,
+				_elm_lang$core$Platform$sendToApp(router),
+				_p1._0));
+	});
+var _elm_lang$core$Task$fail = _elm_lang$core$Native_Scheduler.fail;
+var _elm_lang$core$Task$mapError = F2(
+	function (convert, task) {
+		return A2(
+			_elm_lang$core$Task$onError,
+			function (_p2) {
+				return _elm_lang$core$Task$fail(
+					convert(_p2));
+			},
+			task);
+	});
+var _elm_lang$core$Task$succeed = _elm_lang$core$Native_Scheduler.succeed;
+var _elm_lang$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return _elm_lang$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return _elm_lang$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map3 = F4(
+	function (func, taskA, taskB, taskC) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return _elm_lang$core$Task$succeed(
+									A3(func, a, b, c));
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map4 = F5(
+	function (func, taskA, taskB, taskC, taskD) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return _elm_lang$core$Task$succeed(
+											A4(func, a, b, c, d));
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map5 = F6(
+	function (func, taskA, taskB, taskC, taskD, taskE) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return A2(
+											_elm_lang$core$Task$andThen,
+											function (e) {
+												return _elm_lang$core$Task$succeed(
+													A5(func, a, b, c, d, e));
+											},
+											taskE);
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$sequence = function (tasks) {
+	var _p3 = tasks;
+	if (_p3.ctor === '[]') {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '[]'});
+	} else {
+		return A3(
+			_elm_lang$core$Task$map2,
+			F2(
+				function (x, y) {
+					return {ctor: '::', _0: x, _1: y};
+				}),
+			_p3._0,
+			_elm_lang$core$Task$sequence(_p3._1));
+	}
+};
+var _elm_lang$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			_elm_lang$core$Task$map,
+			function (_p4) {
+				return {ctor: '_Tuple0'};
+			},
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Task$spawnCmd(router),
+					commands)));
+	});
+var _elm_lang$core$Task$init = _elm_lang$core$Task$succeed(
+	{ctor: '_Tuple0'});
+var _elm_lang$core$Task$onSelfMsg = F3(
+	function (_p7, _p6, _p5) {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '_Tuple0'});
+	});
+var _elm_lang$core$Task$command = _elm_lang$core$Native_Platform.leaf('Task');
+var _elm_lang$core$Task$Perform = function (a) {
+	return {ctor: 'Perform', _0: a};
+};
+var _elm_lang$core$Task$perform = F2(
+	function (toMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(_elm_lang$core$Task$map, toMessage, task)));
+	});
+var _elm_lang$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(
+					_elm_lang$core$Task$onError,
+					function (_p8) {
+						return _elm_lang$core$Task$succeed(
+							resultToMessage(
+								_elm_lang$core$Result$Err(_p8)));
+					},
+					A2(
+						_elm_lang$core$Task$andThen,
+						function (_p9) {
+							return _elm_lang$core$Task$succeed(
+								resultToMessage(
+									_elm_lang$core$Result$Ok(_p9)));
+						},
+						task))));
+	});
+var _elm_lang$core$Task$cmdMap = F2(
+	function (tagger, _p10) {
+		var _p11 = _p10;
+		return _elm_lang$core$Task$Perform(
+			A2(_elm_lang$core$Task$map, tagger, _p11._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Debug = function() {
@@ -5076,6 +5273,221 @@ var _elm_lang$core$Dict$diff = F2(
 			t1,
 			t2);
 	});
+
+//import Native.Scheduler //
+
+var _elm_lang$core$Native_Time = function() {
+
+var now = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+{
+	callback(_elm_lang$core$Native_Scheduler.succeed(Date.now()));
+});
+
+function setInterval_(interval, task)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var id = setInterval(function() {
+			_elm_lang$core$Native_Scheduler.rawSpawn(task);
+		}, interval);
+
+		return function() { clearInterval(id); };
+	});
+}
+
+return {
+	now: now,
+	setInterval_: F2(setInterval_)
+};
+
+}();
+var _elm_lang$core$Time$setInterval = _elm_lang$core$Native_Time.setInterval_;
+var _elm_lang$core$Time$spawnHelp = F3(
+	function (router, intervals, processes) {
+		var _p0 = intervals;
+		if (_p0.ctor === '[]') {
+			return _elm_lang$core$Task$succeed(processes);
+		} else {
+			var _p1 = _p0._0;
+			var spawnRest = function (id) {
+				return A3(
+					_elm_lang$core$Time$spawnHelp,
+					router,
+					_p0._1,
+					A3(_elm_lang$core$Dict$insert, _p1, id, processes));
+			};
+			var spawnTimer = _elm_lang$core$Native_Scheduler.spawn(
+				A2(
+					_elm_lang$core$Time$setInterval,
+					_p1,
+					A2(_elm_lang$core$Platform$sendToSelf, router, _p1)));
+			return A2(_elm_lang$core$Task$andThen, spawnRest, spawnTimer);
+		}
+	});
+var _elm_lang$core$Time$addMySub = F2(
+	function (_p2, state) {
+		var _p3 = _p2;
+		var _p6 = _p3._1;
+		var _p5 = _p3._0;
+		var _p4 = A2(_elm_lang$core$Dict$get, _p5, state);
+		if (_p4.ctor === 'Nothing') {
+			return A3(
+				_elm_lang$core$Dict$insert,
+				_p5,
+				{
+					ctor: '::',
+					_0: _p6,
+					_1: {ctor: '[]'}
+				},
+				state);
+		} else {
+			return A3(
+				_elm_lang$core$Dict$insert,
+				_p5,
+				{ctor: '::', _0: _p6, _1: _p4._0},
+				state);
+		}
+	});
+var _elm_lang$core$Time$inMilliseconds = function (t) {
+	return t;
+};
+var _elm_lang$core$Time$millisecond = 1;
+var _elm_lang$core$Time$second = 1000 * _elm_lang$core$Time$millisecond;
+var _elm_lang$core$Time$minute = 60 * _elm_lang$core$Time$second;
+var _elm_lang$core$Time$hour = 60 * _elm_lang$core$Time$minute;
+var _elm_lang$core$Time$inHours = function (t) {
+	return t / _elm_lang$core$Time$hour;
+};
+var _elm_lang$core$Time$inMinutes = function (t) {
+	return t / _elm_lang$core$Time$minute;
+};
+var _elm_lang$core$Time$inSeconds = function (t) {
+	return t / _elm_lang$core$Time$second;
+};
+var _elm_lang$core$Time$now = _elm_lang$core$Native_Time.now;
+var _elm_lang$core$Time$onSelfMsg = F3(
+	function (router, interval, state) {
+		var _p7 = A2(_elm_lang$core$Dict$get, interval, state.taggers);
+		if (_p7.ctor === 'Nothing') {
+			return _elm_lang$core$Task$succeed(state);
+		} else {
+			var tellTaggers = function (time) {
+				return _elm_lang$core$Task$sequence(
+					A2(
+						_elm_lang$core$List$map,
+						function (tagger) {
+							return A2(
+								_elm_lang$core$Platform$sendToApp,
+								router,
+								tagger(time));
+						},
+						_p7._0));
+			};
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p8) {
+					return _elm_lang$core$Task$succeed(state);
+				},
+				A2(_elm_lang$core$Task$andThen, tellTaggers, _elm_lang$core$Time$now));
+		}
+	});
+var _elm_lang$core$Time$subscription = _elm_lang$core$Native_Platform.leaf('Time');
+var _elm_lang$core$Time$State = F2(
+	function (a, b) {
+		return {taggers: a, processes: b};
+	});
+var _elm_lang$core$Time$init = _elm_lang$core$Task$succeed(
+	A2(_elm_lang$core$Time$State, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty));
+var _elm_lang$core$Time$onEffects = F3(
+	function (router, subs, _p9) {
+		var _p10 = _p9;
+		var rightStep = F3(
+			function (_p12, id, _p11) {
+				var _p13 = _p11;
+				return {
+					ctor: '_Tuple3',
+					_0: _p13._0,
+					_1: _p13._1,
+					_2: A2(
+						_elm_lang$core$Task$andThen,
+						function (_p14) {
+							return _p13._2;
+						},
+						_elm_lang$core$Native_Scheduler.kill(id))
+				};
+			});
+		var bothStep = F4(
+			function (interval, taggers, id, _p15) {
+				var _p16 = _p15;
+				return {
+					ctor: '_Tuple3',
+					_0: _p16._0,
+					_1: A3(_elm_lang$core$Dict$insert, interval, id, _p16._1),
+					_2: _p16._2
+				};
+			});
+		var leftStep = F3(
+			function (interval, taggers, _p17) {
+				var _p18 = _p17;
+				return {
+					ctor: '_Tuple3',
+					_0: {ctor: '::', _0: interval, _1: _p18._0},
+					_1: _p18._1,
+					_2: _p18._2
+				};
+			});
+		var newTaggers = A3(_elm_lang$core$List$foldl, _elm_lang$core$Time$addMySub, _elm_lang$core$Dict$empty, subs);
+		var _p19 = A6(
+			_elm_lang$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			newTaggers,
+			_p10.processes,
+			{
+				ctor: '_Tuple3',
+				_0: {ctor: '[]'},
+				_1: _elm_lang$core$Dict$empty,
+				_2: _elm_lang$core$Task$succeed(
+					{ctor: '_Tuple0'})
+			});
+		var spawnList = _p19._0;
+		var existingDict = _p19._1;
+		var killTask = _p19._2;
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (newProcesses) {
+				return _elm_lang$core$Task$succeed(
+					A2(_elm_lang$core$Time$State, newTaggers, newProcesses));
+			},
+			A2(
+				_elm_lang$core$Task$andThen,
+				function (_p20) {
+					return A3(_elm_lang$core$Time$spawnHelp, router, spawnList, existingDict);
+				},
+				killTask));
+	});
+var _elm_lang$core$Time$Every = F2(
+	function (a, b) {
+		return {ctor: 'Every', _0: a, _1: b};
+	});
+var _elm_lang$core$Time$every = F2(
+	function (interval, tagger) {
+		return _elm_lang$core$Time$subscription(
+			A2(_elm_lang$core$Time$Every, interval, tagger));
+	});
+var _elm_lang$core$Time$subMap = F2(
+	function (f, _p21) {
+		var _p22 = _p21;
+		return A2(
+			_elm_lang$core$Time$Every,
+			_p22._0,
+			function (_p23) {
+				return f(
+					_p22._1(_p23));
+			});
+	});
+_elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
 
 var _elm_lang$core$Debug$crash = _elm_lang$core$Native_Debug.crash;
 var _elm_lang$core$Debug$log = _elm_lang$core$Native_Debug.log;
@@ -8260,53 +8672,68 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _td5$ld41$NeoNoirClicker$money = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'$',
-					_elm_lang$core$Basics$toString(model.money))),
-			_1: {ctor: '[]'}
-		});
+var _td5$ld41$NeoNoirClicker$viewSuspiciousness = function (suspiciousness) {
+	var _p0 = suspiciousness;
+	switch (_p0.ctor) {
+		case 'ExcellentStanding':
+			return 'You\'re in excellent standing';
+		case 'GoodStanding':
+			return 'No one suspects anything';
+		case 'Shady':
+			return 'You\'re looking a bit shady';
+		case 'Dodgy':
+			return 'The Feds know you\'re up to something';
+		default:
+			return 'You\'re well known to be a crook. It\'s only a matter of time...';
+	}
 };
 var _td5$ld41$NeoNoirClicker$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'SolveCasePressed') {
-			var newMoney = model.money + 1;
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{
-					money: newMoney,
-					dodgyDealEnabled: model.dodgyDealEnabled || (_elm_lang$core$Native_Utils.cmp(newMoney, 50) > -1)
-				});
-		} else {
-			var newMoney = model.money + 5;
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{money: newMoney});
-		}
+		var newModel = function () {
+			var _p1 = msg;
+			switch (_p1.ctor) {
+				case 'SolveCase':
+					var newMoney = model.money + 1;
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							money: newMoney,
+							dodgyDealEnabled: model.dodgyDealEnabled || (_elm_lang$core$Native_Utils.cmp(newMoney, 50) > -1),
+							suspiciousness: A2(_elm_lang$core$Basics$max, 0, model.suspiciousness - 1)
+						});
+				case 'DoDodgyDeal':
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{money: model.money + 5, suspiciousness: model.suspiciousness + 3});
+				case 'GetAPromotion':
+					return model;
+				default:
+					return model;
+			}
+		}();
+		return {ctor: '_Tuple2', _0: newModel, _1: _elm_lang$core$Platform_Cmd$none};
 	});
-var _td5$ld41$NeoNoirClicker$model = {money: 0, dodgyDealEnabled: false};
-var _td5$ld41$NeoNoirClicker$Model = F2(
-	function (a, b) {
-		return {money: a, dodgyDealEnabled: b};
+var _td5$ld41$NeoNoirClicker$Model = F4(
+	function (a, b, c, d) {
+		return {money: a, dodgyDealEnabled: b, suspiciousness: c, rank: d};
 	});
-var _td5$ld41$NeoNoirClicker$DoDodgyDealPressed = {ctor: 'DoDodgyDealPressed'};
+var _td5$ld41$NeoNoirClicker$Corporal = {ctor: 'Corporal'};
+var _td5$ld41$NeoNoirClicker$Officer = {ctor: 'Officer'};
+var _td5$ld41$NeoNoirClicker$init = function () {
+	var model = {money: 0, dodgyDealEnabled: false, suspiciousness: 0, rank: _td5$ld41$NeoNoirClicker$Officer};
+	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+}();
+var _td5$ld41$NeoNoirClicker$GetAPromotion = {ctor: 'GetAPromotion'};
+var _td5$ld41$NeoNoirClicker$DoDodgyDeal = {ctor: 'DoDodgyDeal'};
 var _td5$ld41$NeoNoirClicker$dodgyDealButton = function (model) {
-	var _p1 = model.dodgyDealEnabled;
-	if (_p1 === true) {
+	var _p2 = model.dodgyDealEnabled;
+	if (_p2 === true) {
 		return _elm_lang$core$Maybe$Just(
 			A2(
 				_elm_lang$html$Html$button,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$DoDodgyDealPressed),
+					_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$DoDodgyDeal),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$class('btn'),
@@ -8322,13 +8749,13 @@ var _td5$ld41$NeoNoirClicker$dodgyDealButton = function (model) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _td5$ld41$NeoNoirClicker$SolveCasePressed = {ctor: 'SolveCasePressed'};
+var _td5$ld41$NeoNoirClicker$SolveCase = {ctor: 'SolveCase'};
 var _td5$ld41$NeoNoirClicker$solveCaseButton = function (model) {
 	return A2(
 		_elm_lang$html$Html$button,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$SolveCasePressed),
+			_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$SolveCase),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$class('btn'),
@@ -8341,35 +8768,101 @@ var _td5$ld41$NeoNoirClicker$solveCaseButton = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _td5$ld41$NeoNoirClicker$Tick = function (a) {
+	return {ctor: 'Tick', _0: a};
+};
+var _td5$ld41$NeoNoirClicker$subscriptions = function (model) {
+	return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$millisecond * 250, _td5$ld41$NeoNoirClicker$Tick);
+};
+var _td5$ld41$NeoNoirClicker$Villain = {ctor: 'Villain'};
+var _td5$ld41$NeoNoirClicker$Dodgy = {ctor: 'Dodgy'};
+var _td5$ld41$NeoNoirClicker$Shady = {ctor: 'Shady'};
+var _td5$ld41$NeoNoirClicker$GoodStanding = {ctor: 'GoodStanding'};
+var _td5$ld41$NeoNoirClicker$ExcellentStanding = {ctor: 'ExcellentStanding'};
+var _td5$ld41$NeoNoirClicker$status = function (model) {
+	var suspicion = function () {
+		var suspiciousness = (_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 1000) > 0) ? _td5$ld41$NeoNoirClicker$Villain : ((_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 300) > 0) ? _td5$ld41$NeoNoirClicker$Dodgy : ((_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 100) > 0) ? _td5$ld41$NeoNoirClicker$Shady : ((_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 30) > 0) ? _td5$ld41$NeoNoirClicker$GoodStanding : _td5$ld41$NeoNoirClicker$ExcellentStanding)));
+		return model.dodgyDealEnabled ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			' | ',
+			_td5$ld41$NeoNoirClicker$viewSuspiciousness(suspiciousness)) : '';
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'$',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(model.money),
+						suspicion))),
+			_1: {ctor: '[]'}
+		});
+};
 var _td5$ld41$NeoNoirClicker$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
+		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('bk'),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_elm_lang$core$List$filterMap,
-			_elm_lang$core$Basics$identity,
-			{
+			_0: _td5$ld41$NeoNoirClicker$status(model),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$core$Maybe$Just(
-					_td5$ld41$NeoNoirClicker$money(model)),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$core$Maybe$Just(
-						_td5$ld41$NeoNoirClicker$solveCaseButton(model)),
-					_1: {
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
 						ctor: '::',
-						_0: _td5$ld41$NeoNoirClicker$dodgyDealButton(model),
+						_0: _elm_lang$html$Html_Attributes$class('allButtons'),
 						_1: {ctor: '[]'}
-					}
-				}
-			}));
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('row directActions'),
+								_1: {ctor: '[]'}
+							},
+							A2(
+								_elm_lang$core$List$filterMap,
+								_elm_lang$core$Basics$identity,
+								{
+									ctor: '::',
+									_0: _elm_lang$core$Maybe$Just(
+										_td5$ld41$NeoNoirClicker$solveCaseButton(model)),
+									_1: {
+										ctor: '::',
+										_0: _td5$ld41$NeoNoirClicker$dodgyDealButton(model),
+										_1: {ctor: '[]'}
+									}
+								})),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('row buyActions'),
+									_1: {ctor: '[]'}
+								},
+								A2(
+									_elm_lang$core$List$filterMap,
+									_elm_lang$core$Basics$identity,
+									{ctor: '[]'})),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
 };
-var _td5$ld41$NeoNoirClicker$main = _elm_lang$html$Html$beginnerProgram(
-	{model: _td5$ld41$NeoNoirClicker$model, view: _td5$ld41$NeoNoirClicker$view, update: _td5$ld41$NeoNoirClicker$update})();
+var _td5$ld41$NeoNoirClicker$main = _elm_lang$html$Html$program(
+	{init: _td5$ld41$NeoNoirClicker$init, view: _td5$ld41$NeoNoirClicker$view, update: _td5$ld41$NeoNoirClicker$update, subscriptions: _td5$ld41$NeoNoirClicker$subscriptions})();
 
 var Elm = {};
 Elm['NeoNoirClicker'] = Elm['NeoNoirClicker'] || {};
