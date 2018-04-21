@@ -1,6 +1,7 @@
 module NeoNoirClicker exposing (..)
 
 import Html exposing (Html, button, div, text)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 
 -- Neo-Noir Clicker; "Two Incompatible Genres"
@@ -51,7 +52,6 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ button [ onClick Decrement ] [ text "-" ]
-    , div [] [ text (toString model) ]
-    , button [ onClick Increment ] [ text "+" ]
+    [ div [] [ text ("Score: " ++ (toString model)) ]
+    , button [ onClick Increment , class "btn" ] [ text "Solve case" ]
     ]

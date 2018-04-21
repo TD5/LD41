@@ -3,3 +3,30 @@ body {
     margin: 20px;
     padding: 0;
 }
+
+.btn {
+    background: #4a4a4a;
+    background-image: -webkit-linear-gradient(top, #4a4a4a, #000000);
+    background-image: -moz-linear-gradient(top, #4a4a4a, #000000);
+    background-image: -ms-linear-gradient(top, #4a4a4a, #000000);
+    background-image: -o-linear-gradient(top, #4a4a4a, #000000);
+    background-image: linear-gradient(to bottom, #4a4a4a, #000000);
+    -webkit-border-radius: 5;
+    -moz-border-radius: 5;
+    border-radius: 5px;
+    font-family: Courier New;
+    color: #d1d1d1;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #787878;
+    background-image: -webkit-linear-gradient(top, #787878, #383838);
+    background-image: -moz-linear-gradient(top, #787878, #383838);
+    background-image: -ms-linear-gradient(top, #787878, #383838);
+    background-image: -o-linear-gradient(top, #787878, #383838);
+    background-image: linear-gradient(to bottom, #787878, #383838);
+    text-decoration: none;
+}
