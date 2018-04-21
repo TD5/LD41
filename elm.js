@@ -8263,9 +8263,13 @@ var _elm_lang$html$Html_Events$Options = F2(
 var _td5$ld41$NeoNoirClicker$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
+		var newMoney = model.money + 1;
 		return _elm_lang$core$Native_Utils.update(
 			model,
-			{money: model.money + 1});
+			{
+				money: newMoney,
+				dodgyDealEnabled: model.dodgyDealEnabled || (_elm_lang$core$Native_Utils.cmp(newMoney, 50) > -1)
+			});
 	});
 var _td5$ld41$NeoNoirClicker$model = {money: 0, dodgyDealEnabled: false};
 var _td5$ld41$NeoNoirClicker$Model = F2(
@@ -8291,8 +8295,8 @@ var _td5$ld41$NeoNoirClicker$view = function (model) {
 					_0: _elm_lang$html$Html$text(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							'$ ',
-							_elm_lang$core$Basics$toString(model))),
+							'$',
+							_elm_lang$core$Basics$toString(model.money))),
 					_1: {ctor: '[]'}
 				}),
 			_1: {

@@ -43,7 +43,8 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     SolveCasePressed ->
-      { model | money = model.money + 1 }
+      let newMoney = model.money + 1 in
+      { model | money = newMoney, dodgyDealEnabled = model.dodgyDealEnabled || newMoney >= 50 }
 
 -- VIEW
 
@@ -51,6 +52,6 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div [class "bk"]
-    [ div [] [ text ("$ " ++ (toString model)) ]
+    [ div [] [ text ("$" ++ (toString model.money)) ]
     , button [ onClick SolveCasePressed , class "btn" ] [ text "Solve case" ]
     ]
