@@ -51,7 +51,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-  div []
+  div [class "bk"]
     [ div [] [ text ("Score: " ++ (toString model)) ]
     , button [ onClick Increment , class "btn" ] [ text "Solve case" ]
     ]

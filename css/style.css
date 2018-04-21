@@ -1,7 +1,15 @@
-html,
+html {
+    margin: 0;
+    padding: 20px;
+    color: #fff;
+    font-family: Courier New;
+}
+
 body {
-    margin: 20px;
-    padding: 0;
+    background-image: url("background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-colour: #000;
 }
 
 .btn {
@@ -14,7 +22,6 @@ body {
     -webkit-border-radius: 5;
     -moz-border-radius: 5;
     border-radius: 5px;
-    font-family: Courier New;
     color: #d1d1d1;
     font-size: 20px;
     padding: 10px 20px 10px 20px;
