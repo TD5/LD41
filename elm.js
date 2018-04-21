@@ -8687,9 +8687,10 @@ var _td5$ld41$NeoNoirClicker$viewSuspiciousness = function (suspiciousness) {
 			return 'You\'re well known to be a crook. It\'s only a matter of time...';
 	}
 };
-var _td5$ld41$NeoNoirClicker$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {startTime: a, time: b, money: c, dodgyDealEnabled: d, suspiciousness: e, rank: f};
+var _td5$ld41$NeoNoirClicker$corruptOfficerCost = 250;
+var _td5$ld41$NeoNoirClicker$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {startTime: a, time: b, money: c, dodgyDealEnabled: d, suspiciousness: e, rank: f, corruptOfficers: g};
 	});
 var _td5$ld41$NeoNoirClicker$Corporal = {ctor: 'Corporal'};
 var _td5$ld41$NeoNoirClicker$update = F2(
@@ -8714,6 +8715,10 @@ var _td5$ld41$NeoNoirClicker$update = F2(
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{rank: _td5$ld41$NeoNoirClicker$Corporal});
+				case 'HireCorruptOfficer':
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{money: model.money - _td5$ld41$NeoNoirClicker$corruptOfficerCost, corruptOfficers: model.corruptOfficers + 1});
 				default:
 					var _p2 = _p1._0;
 					return _elm_lang$core$Native_Utils.update(
@@ -8721,7 +8726,8 @@ var _td5$ld41$NeoNoirClicker$update = F2(
 						{
 							time: _p2,
 							startTime: _elm_lang$core$Maybe$Just(
-								A2(_elm_lang$core$Maybe$withDefault, _p2, model.startTime))
+								A2(_elm_lang$core$Maybe$withDefault, _p2, model.startTime)),
+							money: model.money + model.corruptOfficers
 						});
 			}
 		}();
@@ -8729,14 +8735,43 @@ var _td5$ld41$NeoNoirClicker$update = F2(
 	});
 var _td5$ld41$NeoNoirClicker$Officer = {ctor: 'Officer'};
 var _td5$ld41$NeoNoirClicker$init = function () {
-	var model = {startTime: _elm_lang$core$Maybe$Nothing, time: 0, money: 0, dodgyDealEnabled: false, suspiciousness: 0, rank: _td5$ld41$NeoNoirClicker$Officer};
+	var model = {startTime: _elm_lang$core$Maybe$Nothing, time: 0, money: 0, dodgyDealEnabled: false, suspiciousness: 0, rank: _td5$ld41$NeoNoirClicker$Officer, corruptOfficers: 0};
 	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 }();
+var _td5$ld41$NeoNoirClicker$HireCorruptOfficer = {ctor: 'HireCorruptOfficer'};
+var _td5$ld41$NeoNoirClicker$hireCorruptOfficerButton = function (model) {
+	var _p3 = model.rank;
+	if (_p3.ctor === 'Officer') {
+		return _elm_lang$core$Maybe$Nothing;
+	} else {
+		return (_elm_lang$core$Native_Utils.cmp(model.money, _td5$ld41$NeoNoirClicker$corruptOfficerCost) > -1) ? _elm_lang$core$Maybe$Just(
+			A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$HireCorruptOfficer),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('btn'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Hire corrupt officer: $',
+							_elm_lang$core$Basics$toString(_td5$ld41$NeoNoirClicker$corruptOfficerCost))),
+					_1: {ctor: '[]'}
+				})) : _elm_lang$core$Maybe$Nothing;
+	}
+};
 var _td5$ld41$NeoNoirClicker$TakePromotion = {ctor: 'TakePromotion'};
 var _td5$ld41$NeoNoirClicker$takePromotionButton = function (model) {
-	var _p3 = model.startTime;
-	if (_p3.ctor === 'Just') {
-		return ((_elm_lang$core$Native_Utils.cmp(model.time, _p3._0 + (30 * _elm_lang$core$Time$second)) > 0) && _elm_lang$core$Native_Utils.eq(model.rank, _td5$ld41$NeoNoirClicker$Officer)) ? _elm_lang$core$Maybe$Just(
+	var _p4 = model.startTime;
+	if (_p4.ctor === 'Just') {
+		return ((_elm_lang$core$Native_Utils.cmp(model.time, _p4._0 + (30 * _elm_lang$core$Time$second)) > 0) && _elm_lang$core$Native_Utils.eq(model.rank, _td5$ld41$NeoNoirClicker$Officer)) ? _elm_lang$core$Maybe$Just(
 			A2(
 				_elm_lang$html$Html$button,
 				{
@@ -8759,8 +8794,8 @@ var _td5$ld41$NeoNoirClicker$takePromotionButton = function (model) {
 };
 var _td5$ld41$NeoNoirClicker$DoDodgyDeal = {ctor: 'DoDodgyDeal'};
 var _td5$ld41$NeoNoirClicker$dodgyDealButton = function (model) {
-	var _p4 = model.dodgyDealEnabled;
-	if (_p4 === true) {
+	var _p5 = model.dodgyDealEnabled;
+	if (_p5 === true) {
 		return _elm_lang$core$Maybe$Just(
 			A2(
 				_elm_lang$html$Html$button,
@@ -8805,7 +8840,7 @@ var _td5$ld41$NeoNoirClicker$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
 var _td5$ld41$NeoNoirClicker$subscriptions = function (model) {
-	return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$millisecond * 250, _td5$ld41$NeoNoirClicker$Tick);
+	return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$millisecond * 500, _td5$ld41$NeoNoirClicker$Tick);
 };
 var _td5$ld41$NeoNoirClicker$Villain = {ctor: 'Villain'};
 var _td5$ld41$NeoNoirClicker$Dodgy = {ctor: 'Dodgy'};
@@ -8813,6 +8848,23 @@ var _td5$ld41$NeoNoirClicker$Shady = {ctor: 'Shady'};
 var _td5$ld41$NeoNoirClicker$GoodStanding = {ctor: 'GoodStanding'};
 var _td5$ld41$NeoNoirClicker$ExcellentStanding = {ctor: 'ExcellentStanding'};
 var _td5$ld41$NeoNoirClicker$status = function (model) {
+	var corruptOfficers = function () {
+		var _p6 = model.corruptOfficers;
+		switch (_p6) {
+			case 0:
+				return '';
+			case 1:
+				return ' + 1 corrupt underling';
+			default:
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					' + ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(_p6),
+						' corrupt underlings'));
+		}
+	}();
 	var suspicion = function () {
 		var suspiciousness = (_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 1000) > 0) ? _td5$ld41$NeoNoirClicker$Villain : ((_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 300) > 0) ? _td5$ld41$NeoNoirClicker$Dodgy : ((_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 100) > 0) ? _td5$ld41$NeoNoirClicker$Shady : ((_elm_lang$core$Native_Utils.cmp(model.suspiciousness, 30) > 0) ? _td5$ld41$NeoNoirClicker$GoodStanding : _td5$ld41$NeoNoirClicker$ExcellentStanding)));
 		return model.dodgyDealEnabled ? A2(
@@ -8838,7 +8890,10 @@ var _td5$ld41$NeoNoirClicker$status = function (model) {
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(model.rank),
-								A2(_elm_lang$core$Basics_ops['++'], '] ', suspicion)))))),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									corruptOfficers,
+									A2(_elm_lang$core$Basics_ops['++'], '] ', suspicion))))))),
 			_1: {ctor: '[]'}
 		});
 };
@@ -8895,7 +8950,11 @@ var _td5$ld41$NeoNoirClicker$view = function (model) {
 									{
 										ctor: '::',
 										_0: _td5$ld41$NeoNoirClicker$takePromotionButton(model),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: _td5$ld41$NeoNoirClicker$hireCorruptOfficerButton(model),
+											_1: {ctor: '[]'}
+										}
 									})),
 							_1: {ctor: '[]'}
 						}

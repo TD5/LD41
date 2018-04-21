@@ -31,7 +31,8 @@ type alias Model =
         money : Int,
         dodgyDealEnabled : Bool,
         suspiciousness : Int,
-        rank : Rank
+        rank : Rank,
+        corruptOfficers : Int
     }
 
 
@@ -44,10 +45,14 @@ init =
             money = 0,
             dodgyDealEnabled = False,
             suspiciousness = 0,
-            rank = Officer
+            rank = Officer,
+            corruptOfficers = 0
         }
     in
         (model, Cmd.none)
+
+corruptOfficerCost : Int
+corruptOfficerCost = 250
 
 
 -- UPDATE
@@ -58,10 +63,11 @@ type Msg
   | SolveCase
   | DoDodgyDeal
   | TakePromotion
+  | HireCorruptOfficer
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Time.every (Time.millisecond * 250) Tick
+  Time.every (Time.millisecond * 500) Tick
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -81,10 +87,16 @@ update msg model =
           }
         TakePromotion ->
           { model | rank = Corporal }
+        HireCorruptOfficer ->
+          { model | 
+                money = model.money - corruptOfficerCost, 
+                corruptOfficers = model.corruptOfficers + 1
+          }       
         Tick newTime ->
           { model | 
                 time = newTime,
-                startTime = Just <| Maybe.withDefault newTime model.startTime
+                startTime = Just <| Maybe.withDefault newTime model.startTime,
+                money = model.money + model.corruptOfficers
           }
     in
         (newModel, Cmd.none)
@@ -127,8 +139,13 @@ status model =
                 " | " ++ viewSuspiciousness suspiciousness 
             else
                 ""
+        corruptOfficers =
+            case model.corruptOfficers of
+                0 -> ""
+                1 -> " + 1 corrupt underling"
+                n -> " + " ++ (toString n) ++ " corrupt underlings"
     in
-        div [] [ text ("$" ++ (toString model.money) ++ " [" ++ (toString model.rank) ++ "] " ++ suspicion) ]
+        div [] [ text ("$" ++ (toString model.money) ++ " [" ++ (toString model.rank) ++ corruptOfficers ++ "] " ++ suspicion) ]
 
 solveCaseButton : Model -> Html Msg
 solveCaseButton model =
@@ -152,6 +169,19 @@ takePromotionButton model =
 
         Nothing -> Nothing
         
+hireCorruptOfficerButton : Model -> Maybe (Html Msg)
+hireCorruptOfficerButton model =
+    case model.rank of
+        Officer -> 
+            Nothing
+        Corporal -> 
+            if model.money >= corruptOfficerCost then 
+                Just <| 
+                    button 
+                        [ onClick HireCorruptOfficer, class "btn" ] 
+                        [ text ("Hire corrupt officer: $" ++ (toString corruptOfficerCost)) ]
+            else
+                Nothing
 
 view : Model -> Html Msg
 view model =
@@ -170,6 +200,7 @@ view model =
                 (List.filterMap 
                     identity
                     [ takePromotionButton model
+                    , hireCorruptOfficerButton model
                     ]
                 )
             ]
