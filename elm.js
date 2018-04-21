@@ -8704,7 +8704,7 @@ var _td5$ld41$NeoNoirClicker$update = F2(
 						model,
 						{
 							money: newMoney,
-							dodgyDealEnabled: model.dodgyDealEnabled || (_elm_lang$core$Native_Utils.cmp(newMoney, 50) > -1),
+							dodgyDealEnabled: model.dodgyDealEnabled || (_elm_lang$core$Native_Utils.cmp(newMoney, 5) > 0),
 							suspiciousness: A2(_elm_lang$core$Basics$max, 0, model.suspiciousness - 1)
 						});
 				case 'DoDodgyDeal':
@@ -8776,7 +8776,7 @@ var _td5$ld41$NeoNoirClicker$TakePromotion = {ctor: 'TakePromotion'};
 var _td5$ld41$NeoNoirClicker$takePromotionButton = function (model) {
 	var _p4 = model.startTime;
 	if (_p4.ctor === 'Just') {
-		return ((_elm_lang$core$Native_Utils.cmp(model.time, _p4._0 + (30 * _elm_lang$core$Time$second)) > 0) && _elm_lang$core$Native_Utils.eq(model.rank, _td5$ld41$NeoNoirClicker$Officer)) ? _elm_lang$core$Maybe$Just(
+		return ((_elm_lang$core$Native_Utils.cmp(model.money, 255) > 0) && _elm_lang$core$Native_Utils.eq(model.rank, _td5$ld41$NeoNoirClicker$Officer)) ? _elm_lang$core$Maybe$Just(
 			A2(
 				_elm_lang$html$Html$button,
 				{

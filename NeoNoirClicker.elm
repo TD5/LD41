@@ -77,7 +77,7 @@ update msg model =
           let newMoney = model.money + 1 in
           { model | 
                 money = newMoney, 
-                dodgyDealEnabled = model.dodgyDealEnabled || newMoney >= 50,
+                dodgyDealEnabled = model.dodgyDealEnabled || newMoney > 25,
                 suspiciousness = max 0 (model.suspiciousness - 1)
           }
         DoDodgyDeal ->
@@ -162,7 +162,7 @@ takePromotionButton model =
     case model.startTime of
 
         Just start -> 
-            if (model.time > start + (30 * Time.second) && model.rank == Officer) then
+            if (model.money > 255 && model.rank == Officer) then
                 Just <| button [ onClick TakePromotion, class "btn" ] [ text "Take promotion" ]
             else
                 Nothing
