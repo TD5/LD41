@@ -8744,16 +8744,21 @@ var _td5$ld41$NeoNoirClicker$hireCorruptOfficerButton = function (model) {
 	if (_p3.ctor === 'Officer') {
 		return _elm_lang$core$Maybe$Nothing;
 	} else {
-		return (_elm_lang$core$Native_Utils.cmp(model.money, _td5$ld41$NeoNoirClicker$corruptOfficerCost) > -1) ? _elm_lang$core$Maybe$Just(
+		return _elm_lang$core$Maybe$Just(
 			A2(
 				_elm_lang$html$Html$button,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$HireCorruptOfficer),
+					_0: _elm_lang$html$Html_Attributes$disabled(
+						_elm_lang$core$Native_Utils.cmp(model.money, _td5$ld41$NeoNoirClicker$corruptOfficerCost) < 0),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('btn'),
-						_1: {ctor: '[]'}
+						_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$HireCorruptOfficer),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('btn'),
+							_1: {ctor: '[]'}
+						}
 					}
 				},
 				{
@@ -8764,7 +8769,7 @@ var _td5$ld41$NeoNoirClicker$hireCorruptOfficerButton = function (model) {
 							'Hire corrupt officer: $',
 							_elm_lang$core$Basics$toString(_td5$ld41$NeoNoirClicker$corruptOfficerCost))),
 					_1: {ctor: '[]'}
-				})) : _elm_lang$core$Maybe$Nothing;
+				}));
 	}
 };
 var _td5$ld41$NeoNoirClicker$TakePromotion = {ctor: 'TakePromotion'};

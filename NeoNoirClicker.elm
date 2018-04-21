@@ -1,7 +1,7 @@
 module NeoNoirClicker exposing (..)
 
 import Html exposing (Html, button, div, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, disabled)
 import Html.Events exposing (onClick)
 import Time exposing (Time)
 
@@ -175,13 +175,10 @@ hireCorruptOfficerButton model =
         Officer -> 
             Nothing
         Corporal -> 
-            if model.money >= corruptOfficerCost then 
-                Just <| 
-                    button 
-                        [ onClick HireCorruptOfficer, class "btn" ] 
-                        [ text ("Hire corrupt officer: $" ++ (toString corruptOfficerCost)) ]
-            else
-                Nothing
+            Just <| 
+                button 
+                    [ disabled (model.money < corruptOfficerCost ), onClick HireCorruptOfficer, class "btn" ] 
+                    [ text ("Hire corrupt officer: $" ++ (toString corruptOfficerCost)) ]
 
 view : Model -> Html Msg
 view model =
