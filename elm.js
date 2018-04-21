@@ -8799,7 +8799,13 @@ var _td5$ld41$NeoNoirClicker$status = function (model) {
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						_elm_lang$core$Basics$toString(model.money),
-						suspicion))),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							' [',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(model.rank),
+								A2(_elm_lang$core$Basics_ops['++'], '] ', suspicion)))))),
 			_1: {ctor: '[]'}
 		});
 };

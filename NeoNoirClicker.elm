@@ -121,7 +121,7 @@ status model =
             else
                 ""
     in
-        div [] [ text ("$" ++ (toString model.money) ++ suspicion) ]
+        div [] [ text ("$" ++ (toString model.money) ++ " [" ++ (toString model.rank) ++ "] " ++ suspicion) ]
 
 solveCaseButton : Model -> Html Msg
 solveCaseButton model =
