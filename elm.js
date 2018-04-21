@@ -8260,23 +8260,87 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _td5$ld41$NeoNoirClicker$money = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'$',
+					_elm_lang$core$Basics$toString(model.money))),
+			_1: {ctor: '[]'}
+		});
+};
 var _td5$ld41$NeoNoirClicker$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		var newMoney = model.money + 1;
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{
-				money: newMoney,
-				dodgyDealEnabled: model.dodgyDealEnabled || (_elm_lang$core$Native_Utils.cmp(newMoney, 50) > -1)
-			});
+		if (_p0.ctor === 'SolveCasePressed') {
+			var newMoney = model.money + 1;
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					money: newMoney,
+					dodgyDealEnabled: model.dodgyDealEnabled || (_elm_lang$core$Native_Utils.cmp(newMoney, 50) > -1)
+				});
+		} else {
+			var newMoney = model.money + 5;
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{money: newMoney});
+		}
 	});
 var _td5$ld41$NeoNoirClicker$model = {money: 0, dodgyDealEnabled: false};
 var _td5$ld41$NeoNoirClicker$Model = F2(
 	function (a, b) {
 		return {money: a, dodgyDealEnabled: b};
 	});
+var _td5$ld41$NeoNoirClicker$DoDodgyDealPressed = {ctor: 'DoDodgyDealPressed'};
+var _td5$ld41$NeoNoirClicker$dodgyDealButton = function (model) {
+	var _p1 = model.dodgyDealEnabled;
+	if (_p1 === true) {
+		return _elm_lang$core$Maybe$Just(
+			A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$DoDodgyDealPressed),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('btn'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Do dodgy deal'),
+					_1: {ctor: '[]'}
+				}));
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
 var _td5$ld41$NeoNoirClicker$SolveCasePressed = {ctor: 'SolveCasePressed'};
+var _td5$ld41$NeoNoirClicker$solveCaseButton = function (model) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$SolveCasePressed),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('btn'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Solve case'),
+			_1: {ctor: '[]'}
+		});
+};
 var _td5$ld41$NeoNoirClicker$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -8285,41 +8349,24 @@ var _td5$ld41$NeoNoirClicker$view = function (model) {
 			_0: _elm_lang$html$Html_Attributes$class('bk'),
 			_1: {ctor: '[]'}
 		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'$',
-							_elm_lang$core$Basics$toString(model.money))),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
+		A2(
+			_elm_lang$core$List$filterMap,
+			_elm_lang$core$Basics$identity,
+			{
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$button,
-					{
+				_0: _elm_lang$core$Maybe$Just(
+					_td5$ld41$NeoNoirClicker$money(model)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$core$Maybe$Just(
+						_td5$ld41$NeoNoirClicker$solveCaseButton(model)),
+					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$SolveCasePressed),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('btn'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Solve case'),
+						_0: _td5$ld41$NeoNoirClicker$dodgyDealButton(model),
 						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
+					}
+				}
+			}));
 };
 var _td5$ld41$NeoNoirClicker$main = _elm_lang$html$Html$beginnerProgram(
 	{model: _td5$ld41$NeoNoirClicker$model, view: _td5$ld41$NeoNoirClicker$view, update: _td5$ld41$NeoNoirClicker$update})();

@@ -38,6 +38,7 @@ model =
 
 type Msg
   = SolveCasePressed
+  | DoDodgyDealPressed
 
 update : Msg -> Model -> Model
 update msg model =
@@ -45,13 +46,33 @@ update msg model =
     SolveCasePressed ->
       let newMoney = model.money + 1 in
       { model | money = newMoney, dodgyDealEnabled = model.dodgyDealEnabled || newMoney >= 50 }
+    DoDodgyDealPressed ->
+      let newMoney = model.money + 5 in
+      { model | money = newMoney }
 
 -- VIEW
 
+money : Model -> Html Msg
+money model =
+    div [] [ text ("$" ++ (toString model.money)) ]
+
+solveCaseButton : Model -> Html Msg
+solveCaseButton model =
+    button [ onClick SolveCasePressed , class "btn" ] [ text "Solve case" ]
+
+dodgyDealButton : Model -> Maybe (Html Msg)
+dodgyDealButton model =
+    case model.dodgyDealEnabled of
+        True -> Just <| button [ onClick DoDodgyDealPressed , class "btn" ] [ text "Do dodgy deal" ]
+        False -> Nothing
 
 view : Model -> Html Msg
 view model =
   div [class "bk"]
-    [ div [] [ text ("$" ++ (toString model.money)) ]
-    , button [ onClick SolveCasePressed , class "btn" ] [ text "Solve case" ]
-    ]
+    (List.filterMap 
+        identity
+        [ Just <| money model
+        , Just <| solveCaseButton model 
+        , dodgyDealButton model
+        ]
+    )
