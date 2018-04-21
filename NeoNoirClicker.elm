@@ -26,6 +26,8 @@ type Rank
 
 type alias Model = 
     {
+        startTime : Maybe Time,
+        time : Time,
         money : Int,
         dodgyDealEnabled : Bool,
         suspiciousness : Int,
@@ -37,6 +39,8 @@ init : (Model, Cmd Msg)
 init =
     let model =
         {
+            startTime = Nothing,
+            time = 0,
             money = 0,
             dodgyDealEnabled = False,
             suspiciousness = 0,
@@ -53,7 +57,7 @@ type Msg
   = Tick Time
   | SolveCase
   | DoDodgyDeal
-  | GetAPromotion
+  | TakePromotion
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -75,10 +79,13 @@ update msg model =
                 money = model.money + 5,
                 suspiciousness = model.suspiciousness + 3
           }
-        GetAPromotion ->
-          model {- TODO -}
-        Tick _ ->
-          model {- TODO -}
+        TakePromotion ->
+          { model | rank = Corporal }
+        Tick newTime ->
+          { model | 
+                time = newTime,
+                startTime = Just <| Maybe.withDefault newTime model.startTime
+          }
     in
         (newModel, Cmd.none)
 
@@ -133,6 +140,19 @@ dodgyDealButton model =
         True -> Just <| button [ onClick DoDodgyDeal , class "btn" ] [ text "Do dodgy deal" ]
         False -> Nothing
 
+takePromotionButton : Model -> Maybe (Html Msg)
+takePromotionButton model =
+    case model.startTime of
+
+        Just start -> 
+            if (model.time > start + (30 * Time.second) && model.rank == Officer) then
+                Just <| button [ onClick TakePromotion, class "btn" ] [ text "Take promotion" ]
+            else
+                Nothing
+
+        Nothing -> Nothing
+        
+
 view : Model -> Html Msg
 view model =
     div []
@@ -149,7 +169,7 @@ view model =
               div [ class "row buyActions" ]
                 (List.filterMap 
                     identity
-                    [ 
+                    [ takePromotionButton model
                     ]
                 )
             ]

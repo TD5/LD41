@@ -8687,6 +8687,11 @@ var _td5$ld41$NeoNoirClicker$viewSuspiciousness = function (suspiciousness) {
 			return 'You\'re well known to be a crook. It\'s only a matter of time...';
 	}
 };
+var _td5$ld41$NeoNoirClicker$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {startTime: a, time: b, money: c, dodgyDealEnabled: d, suspiciousness: e, rank: f};
+	});
+var _td5$ld41$NeoNoirClicker$Corporal = {ctor: 'Corporal'};
 var _td5$ld41$NeoNoirClicker$update = F2(
 	function (msg, model) {
 		var newModel = function () {
@@ -8705,29 +8710,57 @@ var _td5$ld41$NeoNoirClicker$update = F2(
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{money: model.money + 5, suspiciousness: model.suspiciousness + 3});
-				case 'GetAPromotion':
-					return model;
+				case 'TakePromotion':
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{rank: _td5$ld41$NeoNoirClicker$Corporal});
 				default:
-					return model;
+					var _p2 = _p1._0;
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							time: _p2,
+							startTime: _elm_lang$core$Maybe$Just(
+								A2(_elm_lang$core$Maybe$withDefault, _p2, model.startTime))
+						});
 			}
 		}();
 		return {ctor: '_Tuple2', _0: newModel, _1: _elm_lang$core$Platform_Cmd$none};
 	});
-var _td5$ld41$NeoNoirClicker$Model = F4(
-	function (a, b, c, d) {
-		return {money: a, dodgyDealEnabled: b, suspiciousness: c, rank: d};
-	});
-var _td5$ld41$NeoNoirClicker$Corporal = {ctor: 'Corporal'};
 var _td5$ld41$NeoNoirClicker$Officer = {ctor: 'Officer'};
 var _td5$ld41$NeoNoirClicker$init = function () {
-	var model = {money: 0, dodgyDealEnabled: false, suspiciousness: 0, rank: _td5$ld41$NeoNoirClicker$Officer};
+	var model = {startTime: _elm_lang$core$Maybe$Nothing, time: 0, money: 0, dodgyDealEnabled: false, suspiciousness: 0, rank: _td5$ld41$NeoNoirClicker$Officer};
 	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 }();
-var _td5$ld41$NeoNoirClicker$GetAPromotion = {ctor: 'GetAPromotion'};
+var _td5$ld41$NeoNoirClicker$TakePromotion = {ctor: 'TakePromotion'};
+var _td5$ld41$NeoNoirClicker$takePromotionButton = function (model) {
+	var _p3 = model.startTime;
+	if (_p3.ctor === 'Just') {
+		return ((_elm_lang$core$Native_Utils.cmp(model.time, _p3._0 + (30 * _elm_lang$core$Time$second)) > 0) && _elm_lang$core$Native_Utils.eq(model.rank, _td5$ld41$NeoNoirClicker$Officer)) ? _elm_lang$core$Maybe$Just(
+			A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_td5$ld41$NeoNoirClicker$TakePromotion),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('btn'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Take promotion'),
+					_1: {ctor: '[]'}
+				})) : _elm_lang$core$Maybe$Nothing;
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
 var _td5$ld41$NeoNoirClicker$DoDodgyDeal = {ctor: 'DoDodgyDeal'};
 var _td5$ld41$NeoNoirClicker$dodgyDealButton = function (model) {
-	var _p2 = model.dodgyDealEnabled;
-	if (_p2 === true) {
+	var _p4 = model.dodgyDealEnabled;
+	if (_p4 === true) {
 		return _elm_lang$core$Maybe$Just(
 			A2(
 				_elm_lang$html$Html$button,
@@ -8859,7 +8892,11 @@ var _td5$ld41$NeoNoirClicker$view = function (model) {
 								A2(
 									_elm_lang$core$List$filterMap,
 									_elm_lang$core$Basics$identity,
-									{ctor: '[]'})),
+									{
+										ctor: '::',
+										_0: _td5$ld41$NeoNoirClicker$takePromotionButton(model),
+										_1: {ctor: '[]'}
+									})),
 							_1: {ctor: '[]'}
 						}
 					}),
